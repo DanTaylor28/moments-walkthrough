@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import logo from "../assets/logo.png";
 import styles from "../styles/NavBar.module.css";
 import { NavLink } from "react-router-dom";
-import { CurrentUserContext } from "../App";
+import { useCurrentUser } from "../context/CurrentUserContext";
 
 const NavBar = () => {
-  const currentUser = useContext(CurrentUserContext);
+  const currentUser = useCurrentUser();
   // variables storing the applicable navigation links for logged in or logged out status
   // these are inserted into the code below depending on whether there is a current user or not.
   const loggedInIcons = <>{currentUser?.username}</>
