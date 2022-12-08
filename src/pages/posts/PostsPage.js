@@ -24,13 +24,18 @@ function PostsPage({ message, filter = "" }) {
   //   useLocation used to detect url changes as it will have to refetch posts if the
   //   user clicks between home, liked and feed pages.
   const { pathname } = useLocation();
+// we're using setState to display corresponding search results from the search bar.
+  const [query, setQuery] = useState("");
+
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         // we are requesting the posts by the filter that we declared in the app.js filter value.
         // ie either by followed profiles/liked posts/everything.
-        const { data } = await axiosReq.get(`/posts/?${filter}`);
+        // i also added the search={query} to the request so it takes into account any search bar 
+        // filters that the user makes.
+        const { data } = await axiosReq.get(`/posts/?${filter}search=${query}`);
         setPosts(data);
         setHasLoaded(true);
       } catch (err) {
@@ -39,14 +44,40 @@ function PostsPage({ message, filter = "" }) {
     };
     // we have to set to false so the loading spinner will be shown to users while data is fetched.
     setHasLoaded(false);
-    fetchPosts();
+    // I have moved the fetchPosts() call inside a timeout function so it waits 1 second after the user
+    // stops typing a search before making a request to the api.
+    // This stops the page flashing after each keystroke and is just better ux in general.
+    const timer = setTimeout(() => {
+        fetchPosts();
+    }, 1000);
+    return () => {
+        clearTimeout(timer)
+    }
     // so the fetchPosts code will run every time either filter or pathname values change.
-  }, [filter, pathname]);
+    // Now query is also added, so it runs again if the user changes the search text!
+  }, [filter, query, pathname]);
 
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
         <p>Popular profiles mobile</p>
+        <i className={`fas fa-search ${styles.SearchIcon}`} />
+        {/* added onSubmit prevent default to stop the page automatically refreshing 
+        if the user presses enter after a search. */}
+        <Form
+          className={styles.SearchBar}
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <Form.Control
+        //   value is the query we defined above and to update that we'll call the setQuery 
+        // with the events target value.
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            type="text"
+            className="mr-sm-2"
+            placeholder="Search posts"
+          />
+        </Form>
         {hasLoaded ? (
           <>
             {posts.results.length ? (
