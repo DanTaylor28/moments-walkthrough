@@ -13,6 +13,8 @@ import { axiosReq } from "../../api/axiosDefaults";
 
 import NoResults from "../../assets/no-results.png";
 import Asset from "../../components/Asset";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { fetchMoreData } from "../../utils/utils";
 
 function PostsPage({ message, filter = "" }) {
   // we want to store posts in a results array that will be empty to begin with
@@ -81,10 +83,29 @@ function PostsPage({ message, filter = "" }) {
         {hasLoaded ? (
           <>
             {posts.results.length ? (
-              posts.results.map((post) => (
-                // setPosts is there so user can like and unlike the post.
-                <Post key={post.id} {...post} setPosts={setPosts} />
-              ))
+                // downloaded using npm and autoimported here.
+                <InfiniteScroll 
+                // children prop will tell component which child components we want to render.
+                    children={
+                        // we just moved this code from down below into here because the mapped posts is
+                        // what we want to render.
+                        posts.results.map((post) => (
+                            // setPosts is there so user can like and unlike the post.
+                            <Post key={post.id} {...post} setPosts={setPosts} />
+                          ))
+                    }
+                    // tells component how many posts are currently being displayed.
+                    dataLength={posts.results.length}
+                    loader={<Asset spinner />}
+                    // tells the infinite scroll if there is more data to load on reaching bottom of current page.
+                    // The value is the double not operator - basically saying if there is not a next page 
+                    // value on our api then its false - kinda confusing but yhh..
+                    hasMore={!!posts.next}
+                    // next is a function to call if the above hasMore value equates to true.
+                    // The function fetchMoreData has been declared in utils.js so we're calling that
+                    // with (posts, setPosts)
+                    next={() => fetchMoreData(posts, setPosts)}
+                />
             ) : (
               <Container className={appStyles.Content}>
                 <Asset src={NoResults} message={message} />
