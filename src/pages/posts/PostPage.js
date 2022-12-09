@@ -9,6 +9,10 @@ import { useParams } from "react-router";
 import { axiosReq } from "../../api/axiosDefaults";
 import Post from "./Post";
 
+import CommentCreateForm from "../comments/CommentCreateForm";
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import Comment from "../comments/Comment";
+
 function PostPage() {
   // used to access posts from the api
   // id is the one referenced in the route on App.js
@@ -16,6 +20,10 @@ function PostPage() {
   // to continue using the same data-type whether youre requesting a single post or multiple
   const { id } = useParams();
   const [post, setPost] = useState({ results: [] });
+
+  const currentUser = useCurrentUser();
+  const profile_image = currentUser?.profile_image;
+  const [comments, setComments] = useState({ results: [] });
 
   useEffect(() => {
     const handleMount = async () => {
@@ -25,12 +33,16 @@ function PostPage() {
         // variable a more meaningful name.
         // promise.all() accepts an array of promises, and gets resolved when all promises are
         // resolved, returning an array of data. if any fail, it gets rejected with an error.
-        // so far jus tthe post is being returned, but later ill add comments too.
-        const [{ data: post }] = await Promise.all([
+        // so far just the post is being returned, but later ill add comments too.
+        // destructuring is now added here for comments also, named comments.
+        const [{ data: post }, { data: comments }] = await Promise.all([
           axiosReq.get(`/posts/${id}`),
+          // comments are now being requested here.
+          axiosReq.get(`/comments/?post=${id}`),
         ]);
         setPost({ results: [post] });
-        console.log(post);
+        // calling setComments function here now also we they can be displayed to users.
+        setComments(comments);
       } catch (err) {
         console.log(err);
       }
@@ -50,7 +62,28 @@ function PostPage() {
         {/* passing postPage here will evaluate to truthy, simply applying it without a value
         means it will be returned as true inside our post component. */}
         <Post {...post.results[0]} setPosts={setPost} postPage />
-        <Container className={appStyles.Content}>Comments</Container>
+        <Container className={appStyles.Content}>
+          {currentUser ? (
+            <CommentCreateForm
+              profile_id={currentUser.profile_id}
+              profileImage={profile_image}
+              post={id}
+              setPost={setPost}
+              setComments={setComments}
+            />
+          ) : comments.results.length ? (
+            "Comments"
+          ) : null}
+          {comments.results.length ? (
+            comments.results.map((comment) => (
+              <Comment key={comment.id} {...comment} />
+            ))
+          ) : currentUser ? (
+            <span>No comments yet, be the first to comment!</span>
+          ) : (
+            <span>No comments.. yet</span>
+          )}
+        </Container>
       </Col>
       <Col lg={4} className="d-none d-lg-block p-0 p-lg-2">
         Popular profiles for desktop
