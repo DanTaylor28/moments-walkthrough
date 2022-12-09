@@ -1,4 +1,3 @@
- import { Accordion } from "react-bootstrap"
 import { axiosReq } from "../api/axiosDefaults"
 
 // This is going to be used for our infinitescroll component and will be able
