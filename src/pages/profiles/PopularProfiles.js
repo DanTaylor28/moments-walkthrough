@@ -5,7 +5,8 @@ import appStyles from "../../App.module.css";
 import Asset from "../../components/Asset";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 
-const PopularProfiles = () => {
+// passing in mobile so it is destructured.
+const PopularProfiles = ({ mobile }) => {
   const [profileData, setProfileData] = useState({
     // using page profile later on!
     pageProfile: { results: [] },
@@ -37,13 +38,29 @@ const PopularProfiles = () => {
   }, [currentUser]);
 
   return (
-    <Container className={appStyles.Content}>
+    // If mobile prop exists, we're adding extra styling to the classname attribute.
+    <Container
+      className={`${appStyles.Content} ${
+        mobile && "d-lg-none text-center mb-3"
+      }`}
+    >
       {popularProfiles.results.length ? (
         <>
           <p>Most followed profiles.</p>
-          {popularProfiles.results.map((profile) => (
-            <p key={profile.id}>{profile.owner}</p>
-          ))}
+          {/* again, if mbile exists, we're displaying the pop profiles differently.
+          At the top of the screen with only 4 showing next to eachother. */}
+          {mobile ? (
+            <div className="d-flex justify-content-around">
+              {/* we are slicing the array so only the first 4 profiles show up. */}
+              {popularProfiles.results.slice(0, 4).map((profile) => (
+                <p key={profile.id}>{profile.owner}</p>
+              ))}
+            </div>
+          ) : (
+            popularProfiles.results.map((profile) => (
+              <p key={profile.id}>{profile.owner}</p>
+            ))
+          )}
         </>
       ) : (
         <Asset spinner />

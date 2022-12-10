@@ -63,7 +63,7 @@ function PostsPage({ message, filter = "" }) {
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <p>Popular profiles mobile</p>
+        <PopularProfiles mobile />
         <i className={`fas fa-search ${styles.SearchIcon}`} />
         {/* added onSubmit prevent default to stop the page automatically refreshing 
         if the user presses enter after a search. */}
