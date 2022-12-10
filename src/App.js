@@ -10,6 +10,7 @@ import PostPage from "./pages/posts/PostPage";
 import PostsPage from "./pages/posts/PostsPage";
 import { useCurrentUser } from "./context/CurrentUserContext";
 import PostEditForm from "./pages/posts/PostEditForm";
+import ProfilePage from "./pages/profiles/ProfilePage";
 
 function App() {
   // To establish who the current logged in user is
@@ -57,6 +58,7 @@ function App() {
           <Route exact path="/post/create" render={() => <PostCreateForm />} />
           <Route exact path="/posts/:id" render={() => <PostPage />} />
           <Route exact path="/posts/:id/edit" render={() => <PostEditForm />} />
+          <Route exact path="/profiles/:id" render={() => <ProfilePage />} />
           <Route render={() => <p>Page not found..</p>} />
         </Switch>
       </Container>
