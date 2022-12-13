@@ -5,6 +5,7 @@ import { useCurrentUser } from "../../context/CurrentUserContext";
 import { Link } from "react-router-dom";
 import Avatar from "../../components/Avatar";
 import { Button } from "react-bootstrap";
+import { useSetProfileData } from "../../context/ProfileDataContext";
 
 const Profile = (props) => {
   const { profile, mobile, imageSize = 55 } = props;
@@ -12,6 +13,10 @@ const Profile = (props) => {
 
   const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === owner;
+// we destructured this so we can use the handleFollow function by adding it to the follow button here also.
+// handleFollow is inside useSetProfileData in profileDataContext.js / thats why its done this way i believe..
+  const { handleFollow } = useSetProfileData();
+
   return (
     <div
       className={`my-3 d-flex align-items-center ${mobile && "flex-column"}`}
@@ -42,7 +47,8 @@ const Profile = (props) => {
           ) : (
             <Button
               className={`${btnStyles.Button} ${btnStyles.Black}`}
-              onClick={() => {}}
+              // profile has to be passed as argument since its the profile that the user has just clicked on
+              onClick={() => handleFollow(profile)}
             >
               follow
             </Button>

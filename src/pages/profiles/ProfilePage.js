@@ -29,7 +29,8 @@ function ProfilePage() {
   const currentUser = useCurrentUser();
   const { id } = useParams();
   //   going to be used to update the pages profile data.
-  const setProfileData = useSetProfileData();
+  // had to now destructure setProfileData so we can access handleFollow function.
+  const { setProfileData, handleFollow } = useSetProfileData();
   const { pageProfile } = useProfileData();
   const [profile] = pageProfile.results;
   const is_owner = currentUser?.username === profile?.owner;
@@ -98,7 +99,8 @@ function ProfilePage() {
             ) : (
               <Button
                 className={`${btnStyles.Button} ${btnStyles.Black}`}
-                onClick={() => {}}
+                // add handleFollow along with profile to onClick attribute of the follow button.
+                onClick={() => handleFollow(profile)}
               >
                 follow
               </Button>
@@ -125,7 +127,10 @@ function ProfilePage() {
           next={() => fetchMoreData(profilePosts, setProfilePosts)}
         />
       ) : (
-        <Asset src={NoResults} message={`No results found, ${profile?.owner} hasn't posted yet.`} />
+        <Asset
+          src={NoResults}
+          message={`No results found, ${profile?.owner} hasn't posted yet.`}
+        />
       )}
     </>
   );
