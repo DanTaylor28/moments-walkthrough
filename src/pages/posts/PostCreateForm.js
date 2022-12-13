@@ -16,8 +16,10 @@ import btnStyles from "../../styles/Button.module.css";
 import Asset from "../../components/Asset";
 import { useHistory } from "react-router";
 import { axiosReq } from "../../api/axiosDefaults";
+import { useRedirect } from "../../hooks/useRedirect";
 
 function PostCreateForm() {
+  useRedirect("loggedOut");
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     title: "",
@@ -93,7 +95,7 @@ function PostCreateForm() {
       </Form.Group>
       {errors?.title?.map((message, idx) => (
         <Alert variant="warning" key={idx}>
-            {message}
+          {message}
         </Alert>
       ))}
 
@@ -109,7 +111,7 @@ function PostCreateForm() {
       </Form.Group>
       {errors?.content?.map((message, idx) => (
         <Alert variant="warning" key={idx}>
-            {message}
+          {message}
         </Alert>
       ))}
       <Button
@@ -167,10 +169,10 @@ function PostCreateForm() {
               />
             </Form.Group>
             {errors?.image?.map((message, idx) => (
-        <Alert variant="warning" key={idx}>
-            {message}
-        </Alert>
-      ))}
+              <Alert variant="warning" key={idx}>
+                {message}
+              </Alert>
+            ))}
             <div className="d-md-none">{textFields}</div>
           </Container>
         </Col>

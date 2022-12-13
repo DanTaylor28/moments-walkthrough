@@ -15,6 +15,7 @@ import { fetchMoreData } from "../../utils/utils";
 import CommentCreateForm from "../comments/CommentCreateForm";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import Comment from "../comments/Comment";
+import PopularProfiles from "../profiles/PopularProfiles";
 
 function PostPage() {
   // used to access posts from the api
@@ -58,7 +59,7 @@ function PostPage() {
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <p>Popular profiles for mobile</p>
+        <PopularProfiles mobile />
         {/* I'm spreading the post object from the results array so that its key/value pairs
         are passsed in as props.
         setPosts will be used later to handle likes. */}
@@ -102,7 +103,7 @@ function PostPage() {
         </Container>
       </Col>
       <Col lg={4} className="d-none d-lg-block p-0 p-lg-2">
-        Popular profiles for desktop
+        <PopularProfiles />
       </Col>
     </Row>
   );

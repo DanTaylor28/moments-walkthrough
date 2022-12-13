@@ -26,10 +26,10 @@ export const CurrentUserProvider = ({ children }) => {
   useEffect(() => {
     handleMount();
   }, []);
-  // runs before children components mount, and we want to attach the interceptors before they mount, 
+  // runs before children components mount, and we want to attach the interceptors before they mount,
   // therfore we use useMemo()
   useMemo(() => {
-    
+
     axiosReq.interceptors.request.use(
       async (config) => {
         try {
@@ -54,7 +54,7 @@ export const CurrentUserProvider = ({ children }) => {
         return Promise.reject(err)
       }
     );
-    
+
     // creates response interceptor - attached to axiosRes created by me in axiosDefaults.js
     axiosRes.interceptors.response.use(
       // if no error, just return response
@@ -66,7 +66,7 @@ export const CurrentUserProvider = ({ children }) => {
             // attempt to refresh the token inside a try block
             await axios.post('/dj-rest-auth/token/refresh/')
           } catch(err) {
-            // if try fails, we are ensuring a user was previosuly logged in and then 
+            // if try fails, we are ensuring a user was previosuly logged in and then
             // redirecting them to signin page using history as used previously.
             setCurrentUser(prevCurrentUser => {
               if (prevCurrentUser){
@@ -76,7 +76,7 @@ export const CurrentUserProvider = ({ children }) => {
               return null
             })
           }
-          // if theres no error refreshing the token, an axios instance 
+          // if theres no error refreshing the token, an axios instance
           // is returned with err.config to exit the interceptor.
           return axios(err.config)
         }
@@ -86,7 +86,7 @@ export const CurrentUserProvider = ({ children }) => {
       }
     )
     // added dependency array, for useMemo hook with history inside so it only runs once
-    // when component mounts, if its empty, the linter will throw a warning. Because we have no code to use 
+    // when component mounts, if its empty, the linter will throw a warning. Because we have no code to use
     // interceptor with yet - this will change later..
   }, [history])
 

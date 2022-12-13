@@ -15,7 +15,7 @@ const Profile = (props) => {
   const is_owner = currentUser?.username === owner;
 // we destructured this so we can use the handleFollow function by adding it to the follow button here also.
 // handleFollow is inside useSetProfileData in profileDataContext.js / thats why its done this way i believe..
-  const { handleFollow } = useSetProfileData();
+  const { handleFollow, handleUnfollow } = useSetProfileData();
 
   return (
     <div
@@ -40,7 +40,7 @@ const Profile = (props) => {
           (following_id ? (
             <Button
               className={`${btnStyles.Button} ${btnStyles.BlackOutline}`}
-              onClick={() => {}}
+              onClick={() => handleUnfollow(profile)}
             >
               unfollow
             </Button>

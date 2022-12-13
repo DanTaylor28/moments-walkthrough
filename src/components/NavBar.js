@@ -39,7 +39,7 @@ const NavBar = () => {
   //   }
   // }, [ref])
 
-  // All of the commented out code above has been refactored into its own file - 
+  // All of the commented out code above has been refactored into its own file -
   // useClickOutsideToggle.js. Its exactly the same code just being imported into the file below..
   // The function is destructured and called.
   const { expanded, setExpanded, ref } = useClickOutsideToggle();
