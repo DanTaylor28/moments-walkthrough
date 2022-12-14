@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { axiosReq, axiosRes } from "../api/axiosDefaults";
 import { useHistory } from "react-router-dom";
+import { removeTokenTimestamp, shouldRefreshToken } from "../utils/utils";
 export const CurrentUserContext = createContext();
 export const SetCurrentUserContext = createContext();
 
@@ -32,21 +33,25 @@ export const CurrentUserProvider = ({ children }) => {
 
     axiosReq.interceptors.request.use(
       async (config) => {
-        try {
-          // try to refresh token before sending request
-          await axios.post('/dj-rest-auth/token/refresh/')
-        } catch(err) {
-          // if try fails, and user was prev logged in, that means refresh token has expired
-          // therfore, we will redirect to login page & set current user to null.
-          setCurrentUser((prevCurrentUser) => {
-            if (prevCurrentUser) {
-              history.push('/signin')
-            }
-            return null
-          });
-          // return request config in and outside catch block
-          return config;
+        if (shouldRefreshToken()){
+          try {
+            // try to refresh token before sending request
+            await axios.post('/dj-rest-auth/token/refresh/')
+          } catch(err) {
+            // if try fails, and user was prev logged in, that means refresh token has expired
+            // therfore, we will redirect to login page & set current user to null.
+            setCurrentUser((prevCurrentUser) => {
+              if (prevCurrentUser) {
+                history.push('/signin')
+              }
+              return null
+            });
+            // return request config in and outside catch block
+            removeTokenTimestamp()
+            return config;
+          }
         }
+        
         return config;
       },
       // if theres an error, reject promise with it.
@@ -75,6 +80,7 @@ export const CurrentUserProvider = ({ children }) => {
               // setting users data to null
               return null
             })
+            removeTokenTimestamp()
           }
           // if theres no error refreshing the token, an axios instance
           // is returned with err.config to exit the interceptor.

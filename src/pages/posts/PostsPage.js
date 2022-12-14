@@ -16,6 +16,7 @@ import Asset from "../../components/Asset";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fetchMoreData } from "../../utils/utils";
 import PopularProfiles from "../profiles/PopularProfiles";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 function PostsPage({ message, filter = "" }) {
   // we want to store posts in a results array that will be empty to begin with
@@ -29,6 +30,7 @@ function PostsPage({ message, filter = "" }) {
   const { pathname } = useLocation();
 // we're using setState to display corresponding search results from the search bar.
   const [query, setQuery] = useState("");
+  const currentUser = useCurrentUser();
 
 
   useEffect(() => {
@@ -58,7 +60,7 @@ function PostsPage({ message, filter = "" }) {
     }
     // so the fetchPosts code will run every time either filter or pathname values change.
     // Now query is also added, so it runs again if the user changes the search text!
-  }, [filter, query, pathname]);
+  }, [filter, query, pathname, currentUser]);
 
   return (
     <Row className="h-100">
