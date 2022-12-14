@@ -64,3 +64,4 @@ export const unfollowHelper = (profile, clickedProfile) => {
       // the user owns, so just return it unchanged.
       profile;
 };
+
