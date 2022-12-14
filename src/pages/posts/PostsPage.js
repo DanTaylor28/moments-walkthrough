@@ -16,7 +16,7 @@ import Asset from "../../components/Asset";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fetchMoreData } from "../../utils/utils";
 import PopularProfiles from "../profiles/PopularProfiles";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { useCurrentUser } from "../../context/CurrentUserContext";
 
 function PostsPage({ message, filter = "" }) {
   // we want to store posts in a results array that will be empty to begin with
